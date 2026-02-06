@@ -14,13 +14,6 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                echo '📦 Installing npm dependencies...'
-                sh 'npm install'
-            }
-        }
-
         stage('Run Unit Tests') {
             steps {
                 echo '🧪 Running Jest tests...'
