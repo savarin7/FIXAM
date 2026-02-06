@@ -1,0 +1,8 @@
+services:
+
+  fixam_backend:
+    image: hudson7/neoserver:fixam
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
