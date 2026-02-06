@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools{
+      nodejs('25.6.0')
+    }
+
     environment {
         NODE_ENV = 'production'
     }
