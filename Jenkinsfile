@@ -1,11 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            // Node environment for building and testing
-            image 'node:20-alpine'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         NODE_ENV = 'production'
