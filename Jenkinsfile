@@ -29,14 +29,18 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 echo '🧪 Running Jest tests...'
-                sh 'npm test'
+                dir('backend') {
+                    sh 'npm test'
+                }
             }
         }
 
         stage('Deploy with Docker Compose') {
             steps {
                 echo '🚀 Deploying backend with Docker Compose...'
-                sh 'docker-compose up --build'
+                dir('backend') {
+                    sh 'docker-compose up --build'
+                }
             }
         }
     }
