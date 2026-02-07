@@ -18,6 +18,14 @@ pipeline {
             }
         }
 
+        stage('Install Backend Dependencies') {
+            steps {
+                dir('backend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
                 echo '🧪 Running Jest tests...'
