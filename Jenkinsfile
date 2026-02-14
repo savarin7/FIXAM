@@ -33,11 +33,11 @@ pipeline {
                 echo '🧪 Running Jest tests in CI mode...'
                 dir('backend') {
                     sh '''
-                        npx jest \
-                          --config=./jest.config.js \
+                        npm test -- \
                           --ci \
                           --runInBand \
-                          --detectOpenHandles
+                          --detectOpenHandles \
+                          --config=./jest.config.js
                     '''
                 }
             }
@@ -66,3 +66,4 @@ pipeline {
         }
     }
 }
+ 
