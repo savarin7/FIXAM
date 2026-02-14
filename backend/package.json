@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest --ci --runInBand --reporters=default"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -20,6 +21,9 @@
     "nodemon": "^3.0.2"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "verbose": true,
+    "collectCoverage": true,
+    "coverageDirectory": "coverage"
   }
 }

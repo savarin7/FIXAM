@@ -32,13 +32,7 @@ pipeline {
             steps {
                 echo '🧪 Running Jest tests in CI mode...'
                 dir('backend') {
-                    sh '''
-                        npm test -- \
-                          --ci \
-                          --runInBand \
-                          --detectOpenHandles \
-                          --config=./jest.config.js
-                    '''
+                    sh 'npm run test:ci'
                 }
             }
         }
