@@ -1,12 +1,13 @@
 pipeline {
     agent any
 
-    tools{
-      nodejs('Node')
+    tools {
+        nodejs('Node')
     }
 
     environment {
         NODE_ENV = 'production'
+        CI = 'true'   // Ensures Jest runs in non-interactive CI mode
     }
 
     stages {
@@ -21,17 +22,23 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    sh 'npm install'
-                    sh 'npm test'
+                    echo '📦 Installing backend dependencies using npm ci...'
+                    sh 'npm ci'   // Better for CI than npm install
                 }
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                echo '🧪 Running Jest tests...'
+                echo '🧪 Running Jest tests in CI mode...'
                 dir('backend') {
-                    sh 'npm test'
+                    sh '''
+                        npx jest \
+                          --config=./jest.config.js \
+                          --ci \
+                          --runInBand \
+                          --detectOpenHandles
+                    '''
                 }
             }
         }
@@ -40,7 +47,7 @@ pipeline {
             steps {
                 echo '🚀 Deploying backend with Docker Compose...'
                 dir('backend') {
-                    sh 'docker-compose up --build'
+                    sh 'docker-compose up --build -d'
                 }
             }
         }
@@ -52,6 +59,10 @@ pipeline {
         }
         failure {
             echo '❌ Pipeline failed. Deployment skipped.'
+        }
+        always {
+            echo '🧹 Cleaning workspace...'
+            cleanWs()
         }
     }
 }
