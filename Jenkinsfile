@@ -48,7 +48,7 @@ pipeline {
             }
             steps {
                 dir('backend') {
-                    sh 'docker-compose up --build -d'
+                    sh 'docker compose up --build -d'
                 }
             }
         }
