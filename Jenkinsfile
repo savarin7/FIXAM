@@ -5,11 +5,6 @@ pipeline {
         nodejs('Node')
     }
 
-    environment {
-        NODE_ENV = 'production'
-        CI = 'true'   // Ensures Jest runs in non-interactive CI mode
-    }
-
     stages {
 
         stage('Checkout Code') {
@@ -28,9 +23,19 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('DEBUG WORKSPACE') {
             steps {
-                echo '🧪 Running Jest tests in CI mode...'
+                sh 'pwd'
+                sh 'ls -la'
+            }
+        }
+
+
+        stage('Run Unit Tests') {
+            environment {
+                CI = 'true'
+            }
+            steps {
                 dir('backend') {
                     sh 'npm run test:ci'
                 }
@@ -38,8 +43,10 @@ pipeline {
         }
 
         stage('Deploy with Docker Compose') {
+            environment {
+                NODE_ENV = 'production'
+            }
             steps {
-                echo '🚀 Deploying backend with Docker Compose...'
                 dir('backend') {
                     sh 'docker-compose up --build -d'
                 }
