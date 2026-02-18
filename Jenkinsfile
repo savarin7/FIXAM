@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs('')
+        nodejs('Node')
     }
 
     stages {
@@ -16,9 +16,11 @@ pipeline {
 
         stage('Install Backend Dependencies') {
             steps {
+                dir('backend') {
                     echo '📦 Installing backend dependencies using npm ci...'
                     sh 'npm ci'   // Better for CI than npm install
                 }
+            }
         }
 
         stage('DEBUG WORKSPACE') {
@@ -27,7 +29,6 @@ pipeline {
                 sh 'ls -la'
             }
         }
-
 
         stage('Run Unit Tests') {
             environment {
