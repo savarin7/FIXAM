@@ -51,8 +51,10 @@ pipeline {
         stage('build image'){
             steps {
                 script {
+                    dir('backend') {
                     // Build the Docker image using the Dockerfile in the repo
-                    dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                        dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                    }
                 }
             }
         }
