@@ -53,27 +53,29 @@ pipeline {
                 script {
                     dir('backend') {
                     // Build the Docker image using the Dockerfile in the repo
-                        dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                        dockerImage = docker.build("${IMAGE_NAME}:fixam")
                     }
                 }
             }
         }
 
-        stage('Push Image') {
-            steps {
-                script {
-                    // Log in to Docker registry and push the image
-                    docker.withRegistry("https://${REGISTRY_URL}", 'docker-credentials') {
-                        dockerImage.push("${env.BUILD_NUMBER}")
-                        dockerImage.push('v1')
-                    }
-                }
-            }
-        }
+        // stage('Push Image') {
+        //     steps {
+        //         script {
+        //             // Log in to Docker registry and push the image
+        //             docker.withRegistry("https://${REGISTRY_URL}", 'docker-credentials') {
+        //                 dockerImage.push("${env.BUILD_NUMBER}")
+        //                 dockerImage.push('v1')
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Deploy image') {
             steps {
-                sh 'docker-compose up -d' // Example deployment command, adjust as needed
+                dir('backend') {
+                    sh 'docker-compose up -d' // Example deployment command, adjust as needed
+                }
             }
         }
     }
