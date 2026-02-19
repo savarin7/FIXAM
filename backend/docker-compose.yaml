@@ -1,6 +1,7 @@
 services:
 
   fixam_backend:
+    build: .
     image: hudson7/neoserver:fixam
     ports:
       - "9000:9000"
