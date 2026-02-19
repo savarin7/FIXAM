@@ -69,7 +69,7 @@ pipeline {
             }
         }
 
-        stage('Deploy with Docker Compose') {
+        stage('Deploy image') {
             steps {
                 sh 'docker-compose up -d' // Example deployment command, adjust as needed
             }
