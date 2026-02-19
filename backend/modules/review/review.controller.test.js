@@ -1,4 +1,4 @@
-const { getAllReviews, getReviewById, createReview } = require('./review.controller');
+const { getAllReviews, getReviewsByService, getReviewById, createReview } = require('./review.controller');
 const Review = require('../../model/review');
 
 jest.mock('../../model/review', () => ({
@@ -20,6 +20,13 @@ const buildDoublePopulate = (finalValue) => {
   return { first, second };
 };
 
+const buildTriplePopulate = (finalValue) => {
+  const third = jest.fn().mockResolvedValue(finalValue);
+  const second = jest.fn().mockReturnValue({ populate: third });
+  const first = jest.fn().mockReturnValue({ populate: second });
+  return { first, second, third };
+};
+
 describe('Review Controller', () => {
   beforeEach(() => jest.clearAllMocks());
 
@@ -35,6 +42,25 @@ describe('Review Controller', () => {
       expect(Review.find).toHaveBeenCalledTimes(1);
       expect(first).toHaveBeenCalledWith('customer');
       expect(second).toHaveBeenCalledWith('artisan');
+      expect(res.json).toHaveBeenCalledWith(reviews);
+    });
+  });
+
+  describe('getReviewsByService', () => {
+    it('filters by serviceId and populates customer, artisan, and service', async () => {
+      const reviews = [{ id: 1, service: 's1' }];
+      const { first, second, third } = buildTriplePopulate(reviews);
+      Review.find.mockReturnValue({ populate: first });
+
+      const req = { params: { serviceId: 's1' } };
+      const res = createRes();
+
+      await getReviewsByService(req, res);
+
+      expect(Review.find).toHaveBeenCalledWith({ service: 's1' });
+      expect(first).toHaveBeenCalledWith('customer');
+      expect(second).toHaveBeenCalledWith('artisan');
+      expect(third).toHaveBeenCalledWith('service');
       expect(res.json).toHaveBeenCalledWith(reviews);
     });
   });

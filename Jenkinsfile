@@ -5,6 +5,13 @@ pipeline {
         nodejs('Node')
     }
 
+    environment {
+        // Reference the credentials ID created in Jenkins
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        REGISTRY_URL = 'index.docker.io' // Default for Docker Hub
+        IMAGE_NAME = 'hudson7/neoserver'
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -41,22 +48,30 @@ pipeline {
             }
         }
 
-        stage('Deploy with Docker Compose') {
-            environment {
-                NODE_ENV = 'production'
-            }
+        stage('build image'){
             steps {
-                dir('backend') {
-                    agent {
-                        docker {
-                            image 'node:22.22.0'
-                            // Run the container on the node specified at the
-                            // top-level of the Pipeline, in the same workspace,
-                            // rather than on a new node entirely:
-                            reuseNode true
-                        }
+                script {
+                    // Build the Docker image using the Dockerfile in the repo
+                    dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+
+        stage('Push Image') {
+            steps {
+                script {
+                    // Log in to Docker registry and push the image
+                    docker.withRegistry("https://${REGISTRY_URL}", 'dockerhub-credentials') {
+                        dockerImage.push("${env.BUILD_NUMBER}")
+                        dockerImage.push('v1')
                     }
                 }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                sh 'docker-compose up -d' // Example deployment command, adjust as needed
             }
         }
     }
