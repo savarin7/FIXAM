@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         // Reference the credentials ID created in Jenkins
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKERHUB_CREDENTIALS = credentials('docker-credentials')
         REGISTRY_URL = 'index.docker.io' // Default for Docker Hub
         IMAGE_NAME = 'hudson7/neoserver'
     }
