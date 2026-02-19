@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     // Log in to Docker registry and push the image
-                    docker.withRegistry("https://${REGISTRY_URL}", 'dockerhub-credentials') {
+                    docker.withRegistry("https://${REGISTRY_URL}", 'docker-credentials') {
                         dockerImage.push("${env.BUILD_NUMBER}")
                         dockerImage.push('v1')
                     }
