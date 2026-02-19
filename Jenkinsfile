@@ -24,7 +24,7 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    echo '📦 Installing backend dependencies using npm ci...'
+                    echo '📦 Installing backend dependencies........'
                     sh 'npm ci'   // Better for CI than npm install
                 }
             }
