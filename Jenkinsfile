@@ -71,13 +71,6 @@ pipeline {
         //     }
         // }
 
-        stage('Deploy image') {
-            steps {
-                dir('backend') {
-                    sh 'docker-compose up -d' // Example deployment command, adjust as needed
-                }
-            }
-        }
     }
 
     post {
